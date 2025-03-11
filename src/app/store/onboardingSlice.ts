@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { type OnboardingState } from "./types";
+import { ONBOARDING_STEPS } from "../constants/auth/steps";
 
 const initialState: OnboardingState = {
   currentStep: 0,
@@ -18,10 +19,11 @@ export const onboardingSlice = createSlice({
       state.currentStep = action.payload;
     },
     setNextStep: (state) => {
-      state.currentStep += 1;
+      if (state.currentStep < ONBOARDING_STEPS.length - 1)
+        state.currentStep += 1;
     },
     setPreviousStep: (state) => {
-      state.currentStep -= 1;
+      if (state.currentStep > 0) state.currentStep -= 1;
     },
   },
 });

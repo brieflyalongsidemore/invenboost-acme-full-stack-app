@@ -1,4 +1,5 @@
 import { AccountDetails } from "@/app/get-started/steps/AccountDetails";
+import { BenifitCardUpload } from "@/app/get-started/steps/BenifitCardUpload";
 import { InsuranceDetails } from "@/app/get-started/steps/InsuranceDetails";
 
 export const ONBOARDING_STEPS: Step[] = [
@@ -17,10 +18,11 @@ export const ONBOARDING_STEPS: Step[] = [
     component: <InsuranceDetails />,
   },
   {
-    id: "security",
-    title: "Security Questions",
-    description: "Please enter your security questions",
-    component: <>SecurityQuestionsForm</>,
+    id: "benifit-card-upload",
+    title: "Please Upload the Image of Your Benefit Card",
+    description:
+      "By securely integrating your benefits information, Addy can provide personalized recommendations and enhance your healthcare experience.",
+    component: <BenifitCardUpload />,
   },
 ];
 
