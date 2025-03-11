@@ -28,7 +28,7 @@ export const StepIndicator = () => {
           <button
             onClick={() => handleGoToStep(i)}
             key={`${step.title[0]}-${i}`}
-            className={cn("h-1 rounded-lg bg-accent px-5", {
+            className={cn("h-1 w-full rounded-lg bg-accent", {
               "bg-secondary": i !== currentStepIndex,
             })}
           ></button>
