@@ -7,9 +7,7 @@ import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 
 export const StepIndicator = () => {
-  const {
-    onboarding: { currentStep },
-  } = useSelector();
+  const currentStep = useSelector((state) => state.onboarding.currentStep);
   const dispatch = useDispatch();
 
   const currentStepIndex = ONBOARDING_STEPS.findIndex(

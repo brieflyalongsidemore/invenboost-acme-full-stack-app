@@ -1,5 +1,9 @@
 import { useSelector as useMainSelector } from "react-redux";
 
 import { type RootState } from "@/app/store";
+import { useMemo } from "react";
 
-export const useSelector = () => useMainSelector((state: RootState) => state);
+export function useSelector<T>(selector: (state: RootState) => T): T {
+  const selectedState = useMainSelector(selector);
+  return useMemo(() => selectedState, [selectedState]);
+}

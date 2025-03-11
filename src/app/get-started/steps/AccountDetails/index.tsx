@@ -5,12 +5,12 @@ import { Input } from "@/app/components/ui/input";
 import { InfoIcon } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { useFormik } from "formik";
-import { z } from "zod";
 import { withZodSchema } from "formik-validator-zod";
 import { handleOnChange } from "@/lib/handleInputChange";
 import { useMainForm } from "@/app/hooks/useMainForm";
 import { useDispatch } from "react-redux";
 import { setNextStep } from "@/app/store/onboardingSlice";
+import { SignUpSchema, type SignUpSchemaType } from "../../schemas";
 
 export const AccountDetails = () => {
   const step = useCurrentStep();
@@ -150,21 +150,3 @@ export const AccountDetails = () => {
     </div>
   );
 };
-
-export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
-
-export const SignUpSchema = z.object({
-  firstName: z.string().min(1, "First name is required."),
-  lastName: z.string().min(1, "Last name is required."),
-  email: z.string().email("Enter a valid email address."),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character",
-    ),
-  phone: z.string().min(10, "Phone number is required."),
-  accessCode: z.string().min(6, "Access code is required."),
-});

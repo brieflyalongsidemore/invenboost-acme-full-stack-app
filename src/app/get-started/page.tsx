@@ -2,9 +2,10 @@
 
 import { useCurrentStep } from "../hooks/useCurrentStep";
 import { FormikProvider, useFormik } from "formik";
-import { SignUpSchema } from "./steps/AccountDetails";
 import { withZodSchema } from "formik-validator-zod";
 import { z } from "zod";
+import { InsuranceDetailsSchema, SignUpSchema } from "./schemas";
+import ReduxProvider from "../providers/reduxProvider";
 
 export default function GetStartedPage() {
   const currentStepData = useCurrentStep();
@@ -19,25 +20,33 @@ export default function GetStartedPage() {
         phone: "",
         accessCode: "",
       },
+      insuranceForm: {
+        provider: "",
+        memberId: "",
+        groupNumber: "",
+      },
     },
-    validateOnChange: false,
-    validateOnBlur: false,
+
     onSubmit: async (values) => {
       console.log(values);
     },
     validate: withZodSchema(MainFormSchema),
   });
+
   return (
     <main className="mx-20 mt-10 max-w-[700px]">
-      <FormikProvider value={mainForm}>
-        {currentStepData?.component}
-      </FormikProvider>
+      <ReduxProvider>
+        <FormikProvider value={mainForm}>
+          {currentStepData?.component}
+        </FormikProvider>
+      </ReduxProvider>
     </main>
   );
 }
 
 export const MainFormSchema = z.object({
   signUpForm: SignUpSchema,
+  insuranceForm: InsuranceDetailsSchema,
 });
 
 export type MainFormSchemaType = z.infer<typeof MainFormSchema>;
