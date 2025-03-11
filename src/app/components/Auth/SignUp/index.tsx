@@ -24,8 +24,8 @@ export const SignUpForm = () => {
           <form action="#" method="POST" className="space-y-4">
             <div>
               <div className="grid w-full items-center gap-y-3">
-                <Label htmlFor="email">
-                  Email <span className="text-red-500">*</span>
+                <Label required htmlFor="email">
+                  Email
                 </Label>
                 <Input type="email" id="email" placeholder="Email Address" />
               </div>
