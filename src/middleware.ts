@@ -8,9 +8,10 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
     cookieName:
       process.env.NODE_ENV === "production"
-        ? "__Secure-next-auth.session-token"
-        : "next-auth.session-token",
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
   });
+  console.log(isAuth);
   const pathname = request.nextUrl.pathname;
   if (pathname === "/" && isAuth) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
