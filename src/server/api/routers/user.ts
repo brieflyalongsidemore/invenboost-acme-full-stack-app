@@ -24,6 +24,7 @@ export const userRouter = createTRPCRouter({
   getCompanyInsuranceProviders: protectedProcedure.query(async ({ ctx }) => {
     const insuranceProviders = await ctx.db.provider.findMany({
       where: {
+        //@ts-expect-error fix session type
         companyId: ctx.session.user.companyId,
       },
     });

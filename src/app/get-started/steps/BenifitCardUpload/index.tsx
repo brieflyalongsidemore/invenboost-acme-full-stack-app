@@ -36,7 +36,6 @@ export const BenifitCardUpload = () => {
       setSelectedFile(generateStaticFile(form.values.benefitCardForm.document));
     }
   }, [form.values.benefitCardForm.document]);
-  console.log(form.values);
 
   const { mutate: uploadBenefitCard, isPending } =
     api.user.uploadBenefitCard.useMutation({
@@ -49,7 +48,7 @@ export const BenifitCardUpload = () => {
         } else toast("Something went wrong while creating your account.");
       },
     });
-
+  console.log(selectedFile);
   return (
     <div>
       <StepHeading
@@ -63,7 +62,7 @@ export const BenifitCardUpload = () => {
           onFilesSelected={async (files) => {
             if (files.length)
               // this is temporary until the file upload is implemented
-              setSelectedFile(generateStaticFile(files[0]?.name ?? ""));
+              setSelectedFile(files[0]);
             else setSelectedFile(null);
           }}
         />

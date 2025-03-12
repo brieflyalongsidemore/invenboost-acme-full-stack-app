@@ -1,4 +1,5 @@
 import { type User } from "@prisma/client";
+//eslint-disable-next-line
 import NextAuth from "next-auth";
 
 declare module "next-auth" {

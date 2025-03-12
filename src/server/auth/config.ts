@@ -72,6 +72,7 @@ export const authConfig = {
     strategy: "jwt",
   },
   pages: {},
+  trustHost: true,
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       console.log(user, session);

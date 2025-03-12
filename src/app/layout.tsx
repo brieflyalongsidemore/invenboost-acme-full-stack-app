@@ -8,6 +8,11 @@ import { Toaster } from "./components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const metadata: Metadata = {
+  title: "ACME AI",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
