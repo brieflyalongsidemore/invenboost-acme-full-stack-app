@@ -28,7 +28,7 @@ export const StepsTracker = () => {
   };
 
   return (
-    <div className="w-full space-y-1 text-sm">
+    <div className="mb-5 flex w-full space-y-1 text-sm md:mb-0 md:block">
       {steps.map((step, index) => (
         <Collapsible
           key={`${step.id}-${index}`}

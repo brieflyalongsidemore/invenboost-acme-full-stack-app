@@ -15,6 +15,7 @@ import { api } from "@/trpc/react";
 import { signIn } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export const AccountDetails = () => {
   const step = useCurrentStep();
@@ -169,7 +170,11 @@ export const AccountDetails = () => {
           </span>
         </div>
         <div className="col-span-2 mt-5 grid grid-cols-2 gap-5">
-          <Button variant={"outline"}>Cancel</Button>
+          <Link className="w-full" href="/auth/sign-in">
+            <Button className="w-[inherit]" variant={"outline"}>
+              Cancel
+            </Button>
+          </Link>
           <Button loading={isPending} disabled={isPending} type="submit">
             Sign Up
           </Button>

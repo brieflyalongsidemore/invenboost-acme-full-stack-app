@@ -65,9 +65,9 @@ export const GetStartedWrapper: React.FC<
             session: session,
           }}
         >
-          <div className="flex">
-            <div className="min-h-screen lg:flex lg:w-96 lg:flex-col">
-              <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r bg-muted px-6">
+          <div className="flex flex-col md:flex-row">
+            <div className="md:min-h-screen lg:flex lg:w-96 lg:flex-col">
+              <div className="flex h-full grow flex-col gap-y-5 overflow-y-auto border-r bg-muted px-6">
                 <StepIndicator />
                 <nav className="flex flex-1 flex-col">
                   <StepsTracker />

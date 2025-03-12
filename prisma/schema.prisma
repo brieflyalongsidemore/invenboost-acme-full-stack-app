@@ -42,6 +42,12 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Provider {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  companyId String?
+}
+
 model AccessCode {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   companyId String?
@@ -60,6 +66,8 @@ model User {
   memberID       String?
   groupNumber    String?
   benefitCardURL String?
+  companyId String?
+
   password       String
   accounts       Account[]
   sessions       Session[]

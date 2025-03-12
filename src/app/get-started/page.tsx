@@ -13,7 +13,7 @@ export default function GetStartedPage() {
   const currentStepData = useCurrentStep();
 
   return (
-    <main className="mx-20 mt-10 max-w-[700px]">
+    <main className="mx-5 my-10 max-w-[700px] md:mx-20">
       {currentStepData?.component}
     </main>
   );

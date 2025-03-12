@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   Calendar,
+  CheckCheck,
   FileText,
   Home,
   LogOut,
@@ -34,7 +35,9 @@ import { SpendingChart } from "./SpendingChart";
 import { Appointments } from "./Appointments";
 import { VirtualCare } from "./VirtualCareOptions";
 import AddyAvatar from "../../../assets/illustrations/addy-avatar.png";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import Link from "next/link";
 
 // Register ChartJS components
 ChartJS.register(
@@ -50,6 +53,7 @@ ChartJS.register(
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const session = useSession();
 
   const SidebarContent = () => (
     <>
@@ -125,6 +129,20 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
+        {/* This should be closeable and only show if the user haven't completed his profile yet, I'm using it as a way to access the onboarding page. */}
+        <Alert className="flex flex-wrap items-center rounded-none">
+          <div>
+            <CheckCheck className="mb-2 h-5 w-5" />
+            <AlertTitle>Heads Up!</AlertTitle>
+            <AlertDescription>
+              Please finish setting up your profile so Addy can learn more about
+              you and enhance your experience.
+            </AlertDescription>
+          </div>
+          <Link href="/get-started" className="ml-auto">
+            <Button>Finish Setup</Button>
+          </Link>
+        </Alert>
         {/* Mobile Header */}
         <div className="flex items-center border border-b p-4 md:hidden">
           <Sheet>
@@ -147,7 +165,7 @@ export default function Dashboard() {
             {/* Welcome Section */}
             <div className="col-span-1 md:col-span-1 lg:col-span-1">
               <div className="mb-2 text-xl font-bold md:text-2xl">
-                Welcome, Kim!
+                Welcome, {session.data?.user.firstName} 👋
               </div>
               <div className="text-sm text-gray-400">
                 Get your latest appointments and goals.

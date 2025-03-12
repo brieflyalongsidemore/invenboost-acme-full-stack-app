@@ -21,6 +21,15 @@ export const userRouter = createTRPCRouter({
       };
     }),
 
+  getCompanyInsuranceProviders: protectedProcedure.query(async ({ ctx }) => {
+    const insuranceProviders = await ctx.db.provider.findMany({
+      where: {
+        companyId: ctx.session.user.companyId,
+      },
+    });
+    return insuranceProviders;
+  }),
+
   updateUserInsuranceDetails: protectedProcedure
     .input(InsuranceDetailsSchema)
     .mutation(async ({ input, ctx }) => {
