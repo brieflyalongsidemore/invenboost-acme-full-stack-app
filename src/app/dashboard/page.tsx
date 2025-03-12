@@ -34,6 +34,7 @@ import { SpendingChart } from "./SpendingChart";
 import { Appointments } from "./Appointments";
 import { VirtualCare } from "./VirtualCareOptions";
 import AddyAvatar from "../../../assets/illustrations/addy-avatar.png";
+import { signOut } from "next-auth/react";
 
 // Register ChartJS components
 ChartJS.register(
@@ -93,6 +94,12 @@ export default function Dashboard() {
       </nav>
 
       <Button
+        onClick={async () => {
+          await signOut({
+            redirect: true,
+            callbackUrl: "/auth/sign-in",
+          });
+        }}
         variant="ghost"
         className="mt-auto w-full justify-start gap-3 text-gray-400"
       >

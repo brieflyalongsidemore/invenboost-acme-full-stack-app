@@ -18,10 +18,21 @@ export const SignUpSchema = z.object({
   accessCode: z.string().min(6, "Access code is required."),
 });
 
+export const SignInSchema = z.object({
+  email: z.string().email("Enter a valid email address."),
+  password: z.string().min(8, "Enter your password"),
+});
+
+export type SignInSchemaType = z.infer<typeof SignInSchema>;
+
 export type InsuranceDetailsSchemaType = z.infer<typeof InsuranceDetailsSchema>;
 
 export const InsuranceDetailsSchema = z.object({
   provider: z.string().min(1, "Please select an Insurance Provider"),
   memberId: z.string().min(1, "Please enter a Member ID"),
   groupNumber: z.string().min(1, "Please enter a Group Number"),
+});
+
+export const BenefitCardSchema = z.object({
+  document: z.string(),
 });

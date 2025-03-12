@@ -3,7 +3,11 @@
 import { useCurrentStep } from "../hooks/useCurrentStep";
 
 import { z } from "zod";
-import { InsuranceDetailsSchema, SignUpSchema } from "./schemas";
+import {
+  BenefitCardSchema,
+  InsuranceDetailsSchema,
+  SignUpSchema,
+} from "./schemas";
 
 export default function GetStartedPage() {
   const currentStepData = useCurrentStep();
@@ -18,6 +22,7 @@ export default function GetStartedPage() {
 export const MainFormSchema = z.object({
   signUpForm: SignUpSchema,
   insuranceForm: InsuranceDetailsSchema,
+  benefitCardForm: BenefitCardSchema,
 });
 
 export type MainFormSchemaType = z.infer<typeof MainFormSchema>;

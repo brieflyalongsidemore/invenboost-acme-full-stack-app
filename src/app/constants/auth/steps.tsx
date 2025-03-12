@@ -25,6 +25,7 @@ export const ONBOARDING_STEPS: Step[] = [
   {
     id: "benifit-card-upload",
     title: "Please Upload the Image of Your Benefit Card",
+    formKey: "benefitCardForm",
     description:
       "By securely integrating your benefits information, Addy can provide personalized recommendations and enhance your healthcare experience.",
     component: <BenifitCardUpload />,

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -5,8 +7,52 @@ import { Label } from "../../ui/label";
 import { Separator } from "../../ui/separator";
 import { AppleAuthButton } from "../OAuthButtons/Apple";
 import { GoogleAuthButton } from "../OAuthButtons/Google";
+import { useFormik } from "formik";
+import { SignInSchema, type SignInSchemaType } from "@/app/get-started/schemas";
+import { handleOnChange } from "@/lib/handleInputChange";
+import { withZodSchema } from "formik-validator-zod";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const SignInForm = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const form = useFormik<SignInSchemaType>({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: async (values, { validateForm }) => {
+      const errors = await validateForm();
+
+      if (Object.keys(errors).length) return;
+      setLoading(true);
+      const res = await signIn<"credentials">("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      setLoading(false);
+      if (res?.ok && !res.error) {
+        router.push("/dashboard");
+      } else if (res?.error) {
+        console.log(res);
+        toast(
+          res.code === "invalid_credentials"
+            ? "Invalid Credentials"
+            : "Something went wrong",
+        );
+      }
+    },
+    validate: withZodSchema(SignInSchema),
+  });
+
   return (
     <>
       <div className="space-y-1 text-center sm:mx-auto sm:w-full sm:max-w-xl">
@@ -21,15 +67,39 @@ export const SignInForm = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-[680px]">
         <div className="px-6 py-12 shadow sm:rounded-lg sm:px-12">
-          <form action="#" method="POST" className="space-y-4">
+          <form
+            onClick={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+            className="space-y-4"
+          >
             <div className="space-y-4">
               <div className="grid w-full items-center gap-y-3">
                 <Label htmlFor="email">Email</Label>
-                <Input type="email" id="email" placeholder="Email Address" />
+                <Input
+                  onChange={async (e) => {
+                    await handleOnChange(e, form);
+                  }}
+                  value={form.values.email}
+                  errorMessage={form.errors.email}
+                  type="email"
+                  id="email"
+                  placeholder="Email Address"
+                />
               </div>
               <div className="grid w-full items-center gap-y-3">
                 <Label htmlFor="email">Password</Label>
-                <Input type="password" id="password" placeholder="********" />
+                <Input
+                  onChange={async (e) => {
+                    await handleOnChange(e, form);
+                  }}
+                  value={form.values.password}
+                  errorMessage={form.errors.password}
+                  type="password"
+                  id="password"
+                  placeholder="********"
+                />
               </div>
             </div>
 
@@ -44,7 +114,14 @@ export const SignInForm = () => {
             </p>
 
             <div>
-              <Button className="w-full">Sign In</Button>
+              <Button
+                disabled={loading}
+                loading={loading}
+                type="submit"
+                className="w-full"
+              >
+                Sign In
+              </Button>
             </div>
           </form>
 

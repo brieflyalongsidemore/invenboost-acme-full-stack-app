@@ -5,14 +5,51 @@ import { FileUpload } from "../InsuranceDetails/uploadField";
 import { Button } from "@/app/components/ui/button";
 import { useDispatch } from "react-redux";
 import { setNextStep } from "@/app/store/onboardingSlice";
+import { useMainForm } from "@/app/hooks/useMainForm";
+import { useEffect, useState } from "react";
+import { api } from "@/trpc/react";
+import { TRPCClientError } from "@trpc/client";
+import { toast } from "sonner";
 
 export const BenifitCardUpload = () => {
   const step = useCurrentStep();
   const dispatch = useDispatch();
 
-  const handleNextStep = () => {
-    dispatch(setNextStep());
+  const handleNextStep = async () => {
+    await form.setFieldValue("benefitCardForm", {
+      document: selectedFile?.name,
+    });
+    uploadBenefitCard({
+      url: selectedFile!.name,
+    });
   };
+  const form = useMainForm();
+
+  const generateStaticFile = (name: string) => {
+    return new File([""], name, { type: "image/png" });
+  };
+
+  const [selectedFile, setSelectedFile] = useState<File | null>();
+
+  useEffect(() => {
+    if (form.values.benefitCardForm.document) {
+      setSelectedFile(generateStaticFile(form.values.benefitCardForm.document));
+    }
+  }, [form.values.benefitCardForm.document]);
+  console.log(form.values);
+
+  const { mutate: uploadBenefitCard, isPending } =
+    api.user.uploadBenefitCard.useMutation({
+      onSuccess: async () => {
+        dispatch(setNextStep());
+      },
+      onError: (cause) => {
+        if (cause instanceof TRPCClientError) {
+          toast(cause.message);
+        } else toast("Something went wrong while creating your account.");
+      },
+    });
+
   return (
     <div>
       <StepHeading
@@ -21,7 +58,15 @@ export const BenifitCardUpload = () => {
       />
       <div className="mt-10 space-y-3">
         <Label htmlFor="upload-document">Upload Document</Label>
-        <FileUpload />
+        <FileUpload
+          files={selectedFile ? [selectedFile] : []}
+          onFilesSelected={async (files) => {
+            if (files.length)
+              // this is temporary until the file upload is implemented
+              setSelectedFile(generateStaticFile(files[0]?.name ?? ""));
+            else setSelectedFile(null);
+          }}
+        />
       </div>
       <div className="mt-5 w-full gap-5 space-y-3">
         <p className="text-sm text-muted-foreground">
@@ -37,10 +82,21 @@ export const BenifitCardUpload = () => {
           .
         </p>
         <div className="col-span-2 mt-5 grid grid-cols-2 gap-5">
-          <Button onClick={handleNextStep} variant={"outline"}>
+          <Button
+            onClick={() => {
+              dispatch(setNextStep());
+            }}
+            variant={"outline"}
+          >
             Skip for Now
           </Button>
-          <Button onClick={handleNextStep}>Sync Now</Button>
+          <Button
+            disabled={isPending || !selectedFile}
+            loading={isPending}
+            onClick={handleNextStep}
+          >
+            {isPending ? "Uploading..." : "Upload"}
+          </Button>
         </div>
       </div>
     </div>

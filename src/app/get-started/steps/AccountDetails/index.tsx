@@ -1,3 +1,5 @@
+"use client";
+
 import { useCurrentStep } from "@/app/hooks/useCurrentStep";
 import { StepHeading } from "../StepHeading";
 import { Label } from "@/app/components/ui/label";
@@ -8,15 +10,16 @@ import { useFormik } from "formik";
 import { withZodSchema } from "formik-validator-zod";
 import { handleOnChange } from "@/lib/handleInputChange";
 import { useMainForm } from "@/app/hooks/useMainForm";
-import { useDispatch } from "react-redux";
-import { setNextStep } from "@/app/store/onboardingSlice";
 import { SignUpSchema, type SignUpSchemaType } from "../../schemas";
+import { api } from "@/trpc/react";
+import { signIn } from "next-auth/react";
+import { TRPCClientError } from "@trpc/client";
+import { toast } from "sonner";
 
 export const AccountDetails = () => {
   const step = useCurrentStep();
 
   const mainForm = useMainForm();
-  const dispatch = useDispatch();
 
   const form = useFormik<SignUpSchemaType>({
     initialValues: mainForm.values.signUpForm,
@@ -28,9 +31,32 @@ export const AccountDetails = () => {
       if (Object.keys(errors).length) return;
 
       await mainForm.setFieldValue("signUpForm", values);
-      dispatch(setNextStep());
+      createUser({
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        accessCode: values.accessCode,
+      });
     },
     validate: withZodSchema(SignUpSchema),
+  });
+
+  const { mutate: createUser, isPending } = api.user.create.useMutation({
+    onSuccess: async () => {
+      await signIn<"credentials">("credentials", {
+        email: form.values.email,
+        password: form.values.password,
+        callbackUrl: "/",
+        redirect: false,
+      });
+    },
+    onError: (cause) => {
+      if (cause instanceof TRPCClientError) {
+        toast(cause.message);
+      } else toast("Something went wrong while creating your account.");
+    },
   });
 
   return (
@@ -144,7 +170,9 @@ export const AccountDetails = () => {
         </div>
         <div className="col-span-2 mt-5 grid grid-cols-2 gap-5">
           <Button variant={"outline"}>Cancel</Button>
-          <Button type="submit">Sign Up</Button>
+          <Button loading={isPending} disabled={isPending} type="submit">
+            Sign Up
+          </Button>
         </div>
       </form>
     </div>

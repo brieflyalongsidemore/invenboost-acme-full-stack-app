@@ -6,30 +6,41 @@ import {
   Collapsible,
   CollapsibleTrigger,
 } from "@/app/components/ui/collapsible";
-import { ONBOARDING_STEPS } from "@/app/constants/auth/steps";
 import { useSelector } from "@/app/hooks/useSelector";
 import { checkIfFormIsValid } from "@/lib/formValidation";
 import { useMainForm } from "@/app/hooks/useMainForm";
 
+import { useGetStepsArray } from "@/app/hooks/useGetStepsArray";
+import { useDispatch } from "react-redux";
+import { setCurrentStep } from "@/app/store/onboardingSlice";
+
 export const StepsTracker = () => {
   const currentStep = useSelector((state) => state.onboarding.currentStep);
 
-  const currentStepIndex = ONBOARDING_STEPS.findIndex(
-    (_, index) => index === currentStep,
-  );
+  const steps = useGetStepsArray();
+
+  const currentStepIndex = steps.findIndex((_, index) => index === currentStep);
   const form = useMainForm();
+  const dispatch = useDispatch();
+
+  const handleGoToStep = (step: number) => {
+    dispatch(setCurrentStep(step));
+  };
 
   return (
     <div className="w-full space-y-1 text-sm">
-      {ONBOARDING_STEPS.map((step, index) => (
+      {steps.map((step, index) => (
         <Collapsible
-          key={step.id}
+          key={`${step.id}-${index}`}
           className={cn(
             "overflow-hidden rounded-md transition-all",
             currentStepIndex === index && "bg-primary/10",
           )}
         >
-          <CollapsibleTrigger className="flex w-full items-center px-3 py-2 transition-colors hover:bg-muted/50">
+          <CollapsibleTrigger
+            onClick={() => handleGoToStep(index)}
+            className="flex w-full items-center px-3 py-2 transition-colors hover:bg-muted/50"
+          >
             <div className="flex w-full items-center gap-3">
               <div
                 className={cn(

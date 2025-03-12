@@ -13,6 +13,7 @@ interface FileUploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
   accept?: string;
   maxSize?: number; // in bytes
   className?: string;
+  files?: File[];
 }
 
 export const FileUpload = ({
@@ -21,12 +22,19 @@ export const FileUpload = ({
   accept,
   maxSize = 5 * 1024 * 1024, // 5MB default
   className,
+  files: _files,
   ...props
 }: FileUploadProps) => {
   const [files, setFiles] = React.useState<File[]>([]);
   const [isDragging, setIsDragging] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    if (_files) {
+      setFiles(_files);
+    }
+  }, [_files]);
 
   const handleFileChange = (selectedFiles: FileList | null) => {
     if (!selectedFiles) return;

@@ -1,5 +1,5 @@
 import { useSelector } from "@/app/hooks/useSelector";
-import { ONBOARDING_STEPS } from "../constants/auth/steps";
+import { useGetStepsArray } from "./useGetStepsArray";
 
 /**
  * @description: This hooks is used to get the current step info
@@ -7,6 +7,8 @@ import { ONBOARDING_STEPS } from "../constants/auth/steps";
 export const useCurrentStep = () => {
   const currentStep = useSelector((state) => state.onboarding.currentStep);
 
-  const currentStepData = ONBOARDING_STEPS[currentStep];
+  const steps = useGetStepsArray();
+
+  const currentStepData = steps[currentStep];
   return currentStepData;
 };

@@ -2,6 +2,7 @@ import { useCurrentStep } from "@/app/hooks/useCurrentStep";
 import { StepHeading } from "../StepHeading";
 import VoiceVerification from "./verification";
 import { Button } from "@/app/components/ui/button";
+import Link from "next/link";
 
 export const VerifyEHRDetails = () => {
   const step = useCurrentStep();
@@ -26,9 +27,9 @@ export const VerifyEHRDetails = () => {
           </span>
           .
         </p>
-        <Button type="submit" className="w-full">
-          Proceed to Dashboard
-        </Button>
+        <Link className="block w-full" href={"/dashboard"}>
+          <Button className="w-[inherit]">Proceed to Dashboard</Button>
+        </Link>
       </div>
     </div>
   );

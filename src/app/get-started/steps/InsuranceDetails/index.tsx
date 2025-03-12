@@ -23,12 +23,27 @@ import {
   InsuranceDetailsSchema,
   type InsuranceDetailsSchemaType,
 } from "../../schemas";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
+import { TRPCClientError } from "@trpc/client";
 
 export const InsuranceDetails = () => {
   const step = useCurrentStep();
 
   const mainForm = useMainForm();
   const dispatch = useDispatch();
+
+  const { mutate: updateUserInsuranceDetails, isPending } =
+    api.user.updateUserInsuranceDetails.useMutation({
+      onSuccess: async () => {
+        dispatch(setNextStep());
+      },
+      onError: (cause) => {
+        if (cause instanceof TRPCClientError) {
+          toast(cause.message);
+        } else toast("Something went wrong while creating your account.");
+      },
+    });
 
   const form = useFormik<InsuranceDetailsSchemaType>({
     initialValues: mainForm.values.insuranceForm,
@@ -38,13 +53,12 @@ export const InsuranceDetails = () => {
     onSubmit: async (values, { validateForm }) => {
       const errors = await validateForm();
       if (Object.keys(errors).length) return;
-
+      console.log(values);
       await mainForm.setFieldValue("insuranceForm", values);
-      dispatch(setNextStep());
+      updateUserInsuranceDetails(values);
     },
     validate: withZodSchema(InsuranceDetailsSchema),
   });
-
   return (
     <div>
       <StepHeading
@@ -137,8 +151,13 @@ export const InsuranceDetails = () => {
               </span>
               .
             </p>
-            <Button type="submit" className="w-full">
-              Sync Now
+            <Button
+              loading={isPending}
+              disabled={isPending}
+              type="submit"
+              className="w-full"
+            >
+              {isPending ? "Syncing..." : "Sync Now"}
             </Button>
           </div>
         </form>
