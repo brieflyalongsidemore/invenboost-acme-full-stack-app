@@ -6,9 +6,12 @@ export async function middleware(request: NextRequest) {
   const isAuth = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
+    cookieName:
+      process.env.NODE_ENV === "production"
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token",
   });
   const pathname = request.nextUrl.pathname;
-  console.log(pathname);
   if (pathname === "/" && isAuth) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
