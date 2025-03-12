@@ -67,13 +67,7 @@ export const SignInForm = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-[680px]">
         <div className="px-6 py-12 shadow sm:rounded-lg sm:px-12">
-          <form
-            onClick={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
             <div className="space-y-4">
               <div className="grid w-full items-center gap-y-3">
                 <Label htmlFor="email">Email</Label>
@@ -118,6 +112,9 @@ export const SignInForm = () => {
                 disabled={loading}
                 loading={loading}
                 type="submit"
+                onClick={() => {
+                  form.handleSubmit();
+                }}
                 className="w-full"
               >
                 Sign In

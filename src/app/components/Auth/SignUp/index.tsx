@@ -38,13 +38,7 @@ export const SignUpForm = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-[680px]">
         <div className="px-6 py-12 shadow sm:rounded-lg sm:px-12">
-          <form
-            onClick={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
             <div>
               <div className="grid w-full items-center gap-y-3">
                 <Label required htmlFor="email">
@@ -71,7 +65,14 @@ export const SignUpForm = () => {
               </Link>
             </p>
             <div>
-              <Button className="w-full">Sign Up</Button>
+              <Button
+                onClick={() => {
+                  handleSubmit();
+                }}
+                className="w-full"
+              >
+                Sign Up
+              </Button>
             </div>
           </form>
 
