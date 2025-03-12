@@ -41,7 +41,7 @@ src/
 1. Clone the repository:
 
 ```shellscript
-git clone https://github.com/everkers/invenboost-acme-full-stack-app
+git clone https://github.com/brieflyalongsidemore/invenboost-acme-full-stack-app.git
 .git
 cd invenboost-acme-full-stack-app
 ```
